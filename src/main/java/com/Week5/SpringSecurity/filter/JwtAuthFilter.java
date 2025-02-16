@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
@@ -29,51 +30,56 @@ public class JwtAuthFilter extends OncePerRequestFilter
     private final UserService userService;
 
 
+    private final HandlerExceptionResolver handlerExceptionResolver;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
-        log.info("fetching token from headers");
+        try {
+            log.info("fetching token from headers");
 
-        final String reqToken = request.getHeader("Authorization");
+            final String reqToken = request.getHeader("Authorization");
 
-        log.info("token from headers -> {}", reqToken);
+            log.info("token from headers -> {}", reqToken);
 
-        if(reqToken == null || !reqToken.startsWith("Bearer"))
-        {
-            log.info("no token found in headers -> returned");
+            if (reqToken == null || !reqToken.startsWith("Bearer")) {
+                log.info("no token found in headers -> returned");
 
-            filterChain.doFilter(request,response);
-            return;
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            String token = reqToken.split("Bearer ")[1]; // Beared dsfjsdfjbdjhajkdfnkjfda =>> split ["","dsfagfvevfe"]
+
+            System.out.println("TOKEN -> " + token);
+
+            log.info("fetching user form jwtService");
+            Long userId = jwtService.getUserIdFromToken(token);
+
+
+            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                log.info("if user not null");
+                User user = userService.getUserById(userId);
+
+                user.setPassword("");
+                UsernamePasswordAuthenticationToken authenticationToken
+                        = new UsernamePasswordAuthenticationToken(user, null, null);
+
+                authenticationToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request) // useful info if we want to rate limit or other stuff
+                );
+
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+
+            filterChain.doFilter(request, response);
+
         }
-
-        String token = reqToken.split("Bearer ")[1]; // Beared dsfjsdfjbdjhajkdfnkjfda =>> split ["","dsfagfvevfe"]
-
-        System.out.println("TOKEN -> "+token);
-
-        log.info("fetching user form jwtService");
-        Long userId = jwtService.getUserIdFromToken(token);
-
-
-        if(userId != null && SecurityContextHolder.getContext().getAuthentication()== null)
+        catch (Exception ex)
         {
-            log.info("if user not null");
-            User user = userService.getUserById(userId);
-
-            user.setPassword("");
-            UsernamePasswordAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(user,null,null);
-
-            authenticationToken.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request) // useful info if we want to rate limit or other stuff
-            );
-
-
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            handlerExceptionResolver.resolveException(request,response,null,ex);
         }
-
-        filterChain.doFilter(request,response);
-
-
 
     }
 }

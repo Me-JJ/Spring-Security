@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        return userRepo.findByEmail(username).orElseThrow(()-> new ResourceNotFoundException(("User not found with username -> "+username)));
+        return userRepo.findByEmail(username).orElseThrow(()-> new BadCredentialsException(("User not found with username -> "+username)));
     }
 
     public User getUserById(Long id)
@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
 
      if(user.isPresent())
      {
-         throw new BadCredentialsException("User wit email already exits" + signUpDto.getEmail());
+         throw new BadCredentialsException("User with email already exits" + signUpDto.getEmail());
      }
 
      User newUser= modelMapper.map(signUpDto,User.class);
