@@ -4,6 +4,7 @@ import com.Week5.SpringSecurity.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class JwtService
 {
     @Value("${jwt.secretKey}")
@@ -25,7 +27,7 @@ public class JwtService
     public String generateToken(User user)
     {
         return Jwts.builder()
-                .subject(user.getId().toString())
+                .subject(user.getId().toString()) // user id in subject part of the token!
                 .claim("email",user.getEmail())
                 .claim("roles", Set.of("USER","ADMIN"))
                 .issuedAt(new Date())
@@ -36,12 +38,13 @@ public class JwtService
 
     public Long getUserIdFromToken(String token)
     {
-        Claims claims= Jwts.parser()
+        log.info("getUserdIdFromToken");
+        Claims claims = Jwts.parser()
                 .verifyWith(getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
-        return Long.valueOf(claims.getSubject());
+        log.info("retuning ID from jwtService");
+        return Long.valueOf(claims.getSubject()); // get the subject as above we stored the userId in subject of the token
     }
 }

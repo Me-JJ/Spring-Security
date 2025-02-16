@@ -16,14 +16,14 @@ class SpringSecurityApplicationTests
     @Test
 	void contextLoads()
 	{
-		User user = new User(4124L,"jat@gmail.com","1234");
-
-		System.out.println("USER --> "+ user.toString());
-		String token = jwtService.generateToken(user);
-		System.out.println("TOKEN------> "+token);
-
-
-		System.out.println("USER id from Token ----> "+jwtService.getUserIdFromToken(token));
+//		User user = new User(4124L,"jat@gmail.com","1234");
+//
+//		System.out.println("USER --> "+ user.toString());
+//		String token = jwtService.generateToken(user);
+//		System.out.println("TOKEN------> "+token);
+//
+//
+//		System.out.println("USER id from Token ----> "+jwtService.getUserIdFromToken(token));
 
 
 	}

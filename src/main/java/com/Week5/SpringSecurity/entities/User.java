@@ -2,6 +2,7 @@ package com.Week5.SpringSecurity.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
+@AllArgsConstructor
 public class User implements UserDetails
 {
     @Id
@@ -22,14 +24,7 @@ public class User implements UserDetails
     @Column(unique = true)
     private String email;
     private String password;
-
-    public User(Long id, String email, String password)
-    {
-
-        this.id = id * (long) (Math.random() * 100);
-        this.email = email;
-        this.password = password;
-    }
+    private String name;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

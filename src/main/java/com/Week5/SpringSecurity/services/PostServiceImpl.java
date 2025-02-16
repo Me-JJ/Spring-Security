@@ -2,15 +2,19 @@ package com.Week5.SpringSecurity.services;
 
 import com.Week5.SpringSecurity.dto.PostDTO;
 import com.Week5.SpringSecurity.entities.PostEntity;
+import com.Week5.SpringSecurity.entities.User;
 import com.Week5.SpringSecurity.exceptions.ResourceNotFoundException;
 import com.Week5.SpringSecurity.repositories.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
 
@@ -34,6 +38,8 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public PostDTO getPostById(Long postId) {
+
+        log.info("USER using JWT -> "+ (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         PostEntity postEntity = postRepository
                 .findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id "+postId));
