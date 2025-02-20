@@ -18,5 +18,12 @@ spring:
           google:
             client-id: 1037192318729-k33o0tesvo03fcv1vpuhh4vlkkhtctfc.apps.googleusercontent.com
             client-secret: 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
+          github:
+            client-id: 1037192318729-k33o0tesvo03fcv1vpuhh4vlkkhtctfc.apps.googleusercontent.com
+            client-secret: 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
+          facebook:
+            client-id: 1037192318729-k33o0tesvo03fcv1vpuhh4vlkkhtctfc.apps.googleusercontent.com
+            client-secret: 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
+
 jwt:
   secretKey: javatokensecretkey75438745jwttokenclasslecture54

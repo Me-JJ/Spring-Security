@@ -63,7 +63,7 @@ public class JwtAuthFilter extends OncePerRequestFilter
 
                 user.setPassword("");
                 UsernamePasswordAuthenticationToken authenticationToken
-                        = new UsernamePasswordAuthenticationToken(user, null, null);
+                        = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
                 authenticationToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request) // useful info if we want to rate limit or other stuff

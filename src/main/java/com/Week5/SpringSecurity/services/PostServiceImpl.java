@@ -39,7 +39,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostDTO getPostById(Long postId) {
 
-        log.info("USER using JWT -> "+ (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+//        log.info("USER using JWT -> "+ (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         PostEntity postEntity = postRepository
                 .findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id "+postId));

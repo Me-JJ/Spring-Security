@@ -4,6 +4,7 @@ import com.Week5.SpringSecurity.exceptions.ResourceNotFoundException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -29,4 +30,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ApiError> handleJwtException(AuthorizationDeniedException ex) {
+        ApiError apiError = new ApiError("JWT error -> "+ ex.getLocalizedMessage(), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
 }
