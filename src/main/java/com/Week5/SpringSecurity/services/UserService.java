@@ -5,6 +5,7 @@ import com.Week5.SpringSecurity.dto.UserDto;
 import com.Week5.SpringSecurity.entities.User;
 import com.Week5.SpringSecurity.exceptions.ResourceNotFoundException;
 import com.Week5.SpringSecurity.repositories.UserRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
 
@@ -27,12 +29,6 @@ public class UserService implements UserDetailsService {
 
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
-    {
-        return userRepo.findByEmail(username).orElseThrow(()-> new BadCredentialsException(("User not found with username -> "+username)));
     }
 
     public User getUserById(Long id)
@@ -52,6 +48,20 @@ public class UserService implements UserDetailsService {
      return modelMapper.map(userRepo.save(newUser),UserDto.class);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+    {
+        return userRepo.findByEmail(username).orElseThrow(()-> new BadCredentialsException(("User not found with username -> "+username)));
+    }
 
+    public User getUserByEmail(String email)
+    {
+        return userRepo.findByEmail(email).orElse(null);
+    }
 
+    public User save(User user)
+    {
+        log.info("USER -> {}", user);
+        return userRepo.save(user);
+    }
 }

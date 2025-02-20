@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: SpringSecurity
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/SpringSecurityWeek5?useSSL=false
+    username: root
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1037192318729-k33o0tesvo03fcv1vpuhh4vlkkhtctfc.apps.googleusercontent.com
+            client-secret: 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
+jwt:
+  secretKey: javatokensecretkey75438745jwttokenclasslecture54

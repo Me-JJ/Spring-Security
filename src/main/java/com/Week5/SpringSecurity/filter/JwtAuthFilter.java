@@ -36,11 +36,11 @@ public class JwtAuthFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
         try {
-            log.info("fetching token from headers");
+//            log.info("fetching token from headers");
 
             final String reqToken = request.getHeader("Authorization");
 
-            log.info("token from headers -> {}", reqToken);
+//            log.info("token from headers -> {}", reqToken);
 
             if (reqToken == null || !reqToken.startsWith("Bearer ")) {
                 log.info("no token found in headers -> returned");
@@ -51,14 +51,14 @@ public class JwtAuthFilter extends OncePerRequestFilter
 
             String token = reqToken.split("Bearer ")[1]; // Beared dsfjsdfjbdjhajkdfnkjfda =>> split ["","dsfagfvevfe"]
 
-            System.out.println("TOKEN -> " + token);
+//            System.out.println("TOKEN -> " + token);
 
             log.info("fetching user form jwtService");
             Long userId = jwtService.getUserIdFromToken(token);
 
 
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                log.info("if user not null");
+//                log.info("if user not null");
                 User user = userService.getUserById(userId);
 
                 user.setPassword("");
