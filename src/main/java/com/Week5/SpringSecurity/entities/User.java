@@ -1,6 +1,8 @@
 package com.Week5.SpringSecurity.entities;
 
+import com.Week5.SpringSecurity.entities.enums.Permission;
 import com.Week5.SpringSecurity.entities.enums.Role;
+import com.Week5.SpringSecurity.utils.PermissionMapping;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,13 +38,24 @@ public class User implements UserDetails
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Permission> permissions;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(role->
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+
+        roles.forEach(role ->
         {
-            return new SimpleGrantedAuthority("ROLE_"+role.name());
-        }).collect(Collectors.toSet());
+            authorities.addAll(PermissionMapping.getAuthoritiesByRole(role));
+            authorities.add(new SimpleGrantedAuthority("ROLE_"+role.name()));
+        });
+
+        return authorities;
+
     }
+
 
     @Override
     public String getPassword() {

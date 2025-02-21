@@ -1,5 +1,6 @@
 package com.Week5.SpringSecurity.dto;
 
+import com.Week5.SpringSecurity.entities.enums.Permission;
 import com.Week5.SpringSecurity.entities.enums.Role;
 import lombok.Data;
 
@@ -12,4 +13,5 @@ public class SignUpDto
     private String password;
     private String name;
     private Set<Role> roles;
+    private Set<Permission> permissions;
 }
