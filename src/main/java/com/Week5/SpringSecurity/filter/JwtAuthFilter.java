@@ -68,13 +68,9 @@ public class JwtAuthFilter extends OncePerRequestFilter
                 authenticationToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request) // useful info if we want to rate limit or other stuff
                 );
-
-
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-
             filterChain.doFilter(request, response);
-
         }
         catch (Exception ex)
         {
